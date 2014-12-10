@@ -126,42 +126,68 @@ namespace liblolskins {
             return null;
          }
 
-         IFileSystemHandle inibinFileHandle;
          if (result == IoResult.Success) {
             // New folder structure
             var folderName = skinNumber == 0 ? "Base" : "Skin" + skinNumber.ToString("D2");
 
+            IFileSystemHandle inibinFileHandle;
             if (system.AllocateHandleFromPath(championFolderHandle, "Skins/" + folderName + "/" + folderName + ".inibin", out inibinFileHandle) != IoResult.Success) {
                return null;
             }
+
+            byte[] inibinFileData;
+            if (system.ReadAllBytes(inibinFileHandle, out inibinFileData) != IoResult.Success) {
+               return null;
+            }
+
+            using (var ms = new MemoryStream(inibinFileData)) {
+               var inibinFile = inibinLoader.Load(ms);
+
+               var skin = new LoLSkin {
+                  // All skins use the 'SkinBase***' hash
+                  sknFilePath = "DATA/Characters/" + championName + "/Skins/ " + folderName + "/" + (string)inibinFile.Properties[(uint)CharacterInibinKeyHashes.SkinBaseSkn],
+                  sklFilePath = "DATA/Characters/" + championName + "/Skins/ " + folderName + "/" + (string)inibinFile.Properties[(uint)CharacterInibinKeyHashes.SkinBaseSkl],
+                  textureFilePath = "DATA/Characters/" + championName + "/Skins/ " + folderName + "/" + (string)inibinFile.Properties[(uint)CharacterInibinKeyHashes.SkinBaseTexture]
+               };
+
+               if (skinNumber == 0) {
+                  skin.loadScreenTextureFilePath = "DATA/Characters/" + championName + "/Skins/ " + folderName + "/" + championName + "LoadScreen.dds";
+               } else {
+                  skin.loadScreenTextureFilePath = "DATA/Characters/" + championName + "/Skins/ " + folderName + "/" + championName + "LoadScreen_" + skinNumber + ".dds";
+               }
+
+               return skin;
+            }
          } else {
             // Old folder structure
+            IFileSystemHandle inibinFileHandle;
             if (system.AllocateHandleFromPath(championFolderHandle, championName + ".inibin", out inibinFileHandle) != IoResult.Success) {
                return null;
             }
-         }
 
-         byte[] inibinFileData;
-         if (system.ReadAllBytes(inibinFileHandle, out inibinFileData) != IoResult.Success) {
-            return null;
-         }
-
-         using (var ms = new MemoryStream(inibinFileData)) {
-            var inibinFile = inibinLoader.Load(ms);
-
-            var skin = new LoLSkin {
-               sknFilePath = (string)inibinFile.Properties[(uint)GetSknEnumForSkinNumber(skinNumber)],
-               sklFilePath = (string)inibinFile.Properties[(uint)GetSklEnumForSkinNumber(skinNumber)],
-               textureFilePath = (string)inibinFile.Properties[(uint)GetTextureEnumForSkinNumber(skinNumber)]
-            };
-
-            if (skinNumber == 0) {
-               skin.loadScreenTextureFilePath = championName + "LoadScreen.dds";
-            } else {
-               skin.loadScreenTextureFilePath = championName + "LoadScreen_" + skinNumber + ".dds";
+            byte[] inibinFileData;
+            if (system.ReadAllBytes(inibinFileHandle, out inibinFileData) != IoResult.Success) {
+               return null;
             }
 
-            return skin;
+            using (var ms = new MemoryStream(inibinFileData)) {
+               var inibinFile = inibinLoader.Load(ms);
+
+               var skin = new LoLSkin
+               {
+                  sknFilePath = "DATA/Characters/" + championName + "/" + (string)inibinFile.Properties[(uint)GetSknEnumForSkinNumber(skinNumber)],
+                  sklFilePath = "DATA/Characters/" + championName + "/" + (string)inibinFile.Properties[(uint)GetSklEnumForSkinNumber(skinNumber)],
+                  textureFilePath = "DATA/Characters/" + championName + "/" + (string)inibinFile.Properties[(uint)GetTextureEnumForSkinNumber(skinNumber)]
+               };
+
+               if (skinNumber == 0) {
+                  skin.loadScreenTextureFilePath = "DATA/Characters/" + championName + "/" + championName + "LoadScreen.dds";
+               } else {
+                  skin.loadScreenTextureFilePath = "DATA/Characters/" + championName + "/" + championName + "LoadScreen_" + skinNumber + ".dds";
+               }
+
+               return skin;
+            }
          }
       }
    }
