@@ -32,7 +32,7 @@
   <ItemGroup>
     <Reference Include="libdargon.filesystem-api, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\the-dargon-project\packages\libdargon.filesystem-impl.0.0.0\lib\net45\libdargon.filesystem-api.dll</HintPath>
+      <HintPath>..\the-dargon-project\packages\libdargon.filesystem-api.0.0.2\lib\net45\libdargon.filesystem-api.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -51,6 +51,9 @@
       <Project>{211c1834-ed6f-46b6-a7f6-59033dc910d5}</Project>
       <Name>libinibin</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
