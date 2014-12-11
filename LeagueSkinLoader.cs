@@ -9,6 +9,14 @@ namespace Dargon.LeagueOfLegends.Skins {
       public string sklFilePath;
       public string textureFilePath;
       public string loadScreenTextureFilePath;
+
+      public override string ToString() {
+         return "Name: " + skinName +
+                "\nSKN: " + sknFilePath +
+                "\nSKL: " + sklFilePath +
+                "\nTexture: " + textureFilePath +
+                "\nLoadScreenTexture: " + loadScreenTextureFilePath;
+      }
    }
 
    public class LeagueSkinLoader {
