@@ -13,6 +13,38 @@ namespace Dargon.LeagueOfLegends.Skins {
    public class LeagueSkinLoader {
       private readonly IInibinLoader inibinLoader;
 
+      private readonly CharacterInibinKeyHashes[] sknHashLookup = {
+         CharacterInibinKeyHashes.SkinBaseSkn,
+         CharacterInibinKeyHashes.SkinOneSkn,
+         CharacterInibinKeyHashes.SkinTwoSkn,
+         CharacterInibinKeyHashes.SkinThreeSkn,
+         CharacterInibinKeyHashes.SkinFourSkn,
+         CharacterInibinKeyHashes.SkinFiveSkn,
+         CharacterInibinKeyHashes.SkinSixSkn,
+         CharacterInibinKeyHashes.SkinSevenSkn
+      };
+      private readonly CharacterInibinKeyHashes[] sklHashLookup = {
+         CharacterInibinKeyHashes.SkinBaseSkl,
+         CharacterInibinKeyHashes.SkinOneSkl,
+         CharacterInibinKeyHashes.SkinTwoSkl,
+         CharacterInibinKeyHashes.SkinThreeSkl,
+         CharacterInibinKeyHashes.SkinFourSkl,
+         CharacterInibinKeyHashes.SkinFiveSkl,
+         CharacterInibinKeyHashes.SkinSixSkl,
+         CharacterInibinKeyHashes.SkinSevenSkl
+      };
+      private readonly CharacterInibinKeyHashes[] textureHashLookup = {
+         CharacterInibinKeyHashes.SkinBaseTexture,
+         CharacterInibinKeyHashes.SkinOneTexture,
+         CharacterInibinKeyHashes.SkinTwoTexture,
+         CharacterInibinKeyHashes.SkinThreeTexture,
+         CharacterInibinKeyHashes.SkinFourTexture,
+         CharacterInibinKeyHashes.SkinFiveTexture,
+         CharacterInibinKeyHashes.SkinSixTexture,
+         CharacterInibinKeyHashes.SkinSevenTexture
+      };
+
+
       public LeagueSkinLoader() {
          inibinLoader = new InibinLoader();
       }
@@ -45,73 +77,6 @@ namespace Dargon.LeagueOfLegends.Skins {
          return null;
       }
 
-      private CharacterInibinKeyHashes GetSknEnumForSkinNumber(uint skinNumber) {
-         switch (skinNumber) {
-            case 0:
-               return CharacterInibinKeyHashes.SkinBaseSkn;
-            case 1:
-               return CharacterInibinKeyHashes.SkinOneSkn;
-            case 2:
-               return CharacterInibinKeyHashes.SkinTwoSkn;
-            case 3:
-               return CharacterInibinKeyHashes.SkinThreeSkn;
-            case 4:
-               return CharacterInibinKeyHashes.SkinFourSkn;
-            case 5:
-               return CharacterInibinKeyHashes.SkinFiveSkn;
-            case 6:
-               return CharacterInibinKeyHashes.SkinSixSkn;
-            case 7:
-               return CharacterInibinKeyHashes.SkinSevenSkn;
-            default:
-               throw new ArgumentOutOfRangeException("skinNumber");
-         }
-      }
-
-      private CharacterInibinKeyHashes GetSklEnumForSkinNumber(uint skinNumber) {
-         switch (skinNumber) {
-            case 0:
-               return CharacterInibinKeyHashes.SkinBaseSkl;
-            case 1:
-               return CharacterInibinKeyHashes.SkinOneSkl;
-            case 2:
-               return CharacterInibinKeyHashes.SkinTwoSkl;
-            case 3:
-               return CharacterInibinKeyHashes.SkinThreeSkl;
-            case 4:
-               return CharacterInibinKeyHashes.SkinFourSkl;
-            case 5:
-               return CharacterInibinKeyHashes.SkinFiveSkl;
-            case 6:
-               return CharacterInibinKeyHashes.SkinSixSkl;
-            case 7:
-               return CharacterInibinKeyHashes.SkinSevenSkl;
-            default:
-               throw new ArgumentOutOfRangeException("skinNumber");
-         }
-      }
-
-      private CharacterInibinKeyHashes GetTextureEnumForSkinNumber(uint skinNumber) {
-         switch (skinNumber) {
-            case 0:
-               return CharacterInibinKeyHashes.SkinBaseTexture;
-            case 1:
-               return CharacterInibinKeyHashes.SkinOneTexture;
-            case 2:
-               return CharacterInibinKeyHashes.SkinTwoTexture;
-            case 3:
-               return CharacterInibinKeyHashes.SkinThreeTexture;
-            case 4:
-               return CharacterInibinKeyHashes.SkinFourTexture;
-            case 5:
-               return CharacterInibinKeyHashes.SkinFiveTexture;
-            case 6:
-               return CharacterInibinKeyHashes.SkinSixTexture;
-            case 7:
-               return CharacterInibinKeyHashes.SkinSevenTexture;
-            default:
-               throw new ArgumentOutOfRangeException("skinNumber");
-         }
       }
 
       private LoLSkin GetSkinForChampion(IFileSystem system, IFileSystemHandle championFolderHandle, uint skinNumber) {
@@ -161,6 +126,11 @@ namespace Dargon.LeagueOfLegends.Skins {
             }
          } else {
             // Old folder structure
+            if (skinNumber > 7) {
+               // TODO: Find out if there are any old champions that have 8 skins or more. So I can get the hash codes.
+               return null;
+            }
+
             IFileSystemHandle inibinFileHandle;
             if (system.AllocateRelativeHandleFromPath(championFolderHandle, championName + ".inibin", out inibinFileHandle) != IoResult.Success) {
                return null;
@@ -174,11 +144,10 @@ namespace Dargon.LeagueOfLegends.Skins {
             using (var ms = new MemoryStream(inibinFileData)) {
                var inibinFile = inibinLoader.Load(ms);
 
-               var skin = new LoLSkin
-               {
-                  sknFilePath = "DATA/Characters/" + championName + "/" + (string)inibinFile.Properties[(uint)GetSknEnumForSkinNumber(skinNumber)],
-                  sklFilePath = "DATA/Characters/" + championName + "/" + (string)inibinFile.Properties[(uint)GetSklEnumForSkinNumber(skinNumber)],
-                  textureFilePath = "DATA/Characters/" + championName + "/" + (string)inibinFile.Properties[(uint)GetTextureEnumForSkinNumber(skinNumber)]
+               var skin = new LoLSkin {
+                  sknFilePath = "DATA/Characters/" + championName + "/" + (string)inibinFile.Properties[(uint)sknHashLookup[skinNumber]],
+                  sklFilePath = "DATA/Characters/" + championName + "/" + (string)inibinFile.Properties[(uint)sklHashLookup[skinNumber]],
+                  textureFilePath = "DATA/Characters/" + championName + "/" + (string)inibinFile.Properties[(uint)textureHashLookup[skinNumber]]
                };
 
                if (skinNumber == 0) {
