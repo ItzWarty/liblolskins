@@ -4,6 +4,7 @@ using Dargon.FileSystem;
 
 namespace Dargon.LeagueOfLegends.Skins {
    public class LoLSkin {
+      public string skinName;
       public string sknFilePath;
       public string sklFilePath;
       public string textureFilePath;
@@ -13,6 +14,16 @@ namespace Dargon.LeagueOfLegends.Skins {
    public class LeagueSkinLoader {
       private readonly IInibinLoader inibinLoader;
 
+      private readonly CharacterInibinKeyHashes[] nameHashLookup = {
+         CharacterInibinKeyHashes.SkinBaseName,
+         CharacterInibinKeyHashes.SkinOneName,
+         CharacterInibinKeyHashes.SkinTwoName,
+         CharacterInibinKeyHashes.SkinThreeName,
+         CharacterInibinKeyHashes.SkinFourName,
+         CharacterInibinKeyHashes.SkinFiveName,
+         CharacterInibinKeyHashes.SkinSixName,
+         CharacterInibinKeyHashes.SkinSevenName
+      };
       private readonly CharacterInibinKeyHashes[] sknHashLookup = {
          CharacterInibinKeyHashes.SkinBaseSkn,
          CharacterInibinKeyHashes.SkinOneSkn,
@@ -98,6 +109,7 @@ namespace Dargon.LeagueOfLegends.Skins {
 
                var skin = new LoLSkin {
                   // All skins use the 'SkinBase***' hash
+                  skinName = (string)inibinFile.Properties[(uint)CharacterInibinKeyHashes.SkinBaseName],
                   sknFilePath = "DATA/Characters/" + championName + "/Skins/ " + folderName + "/" + (string)inibinFile.Properties[(uint)CharacterInibinKeyHashes.SkinBaseSkn],
                   sklFilePath = "DATA/Characters/" + championName + "/Skins/ " + folderName + "/" + (string)inibinFile.Properties[(uint)CharacterInibinKeyHashes.SkinBaseSkl],
                   textureFilePath = "DATA/Characters/" + championName + "/Skins/ " + folderName + "/" + (string)inibinFile.Properties[(uint)CharacterInibinKeyHashes.SkinBaseTexture]
@@ -132,6 +144,7 @@ namespace Dargon.LeagueOfLegends.Skins {
                var inibinFile = inibinLoader.Load(ms);
 
                var skin = new LoLSkin {
+                  skinName = (string)inibinFile.Properties[(uint)nameHashLookup[skinNumber]],
                   sknFilePath = "DATA/Characters/" + championName + "/" + (string)inibinFile.Properties[(uint)sknHashLookup[skinNumber]],
                   sklFilePath = "DATA/Characters/" + championName + "/" + (string)inibinFile.Properties[(uint)sklHashLookup[skinNumber]],
                   textureFilePath = "DATA/Characters/" + championName + "/" + (string)inibinFile.Properties[(uint)textureHashLookup[skinNumber]]
