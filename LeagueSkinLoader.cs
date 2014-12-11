@@ -58,25 +58,12 @@ namespace Dargon.LeagueOfLegends.Skins {
             return null;
          }
 
-         IFileSystemHandle[] champions;
-         if (system.AllocateChildrenHandles(charactersFolder, out champions) != IoResult.Success) {
+         IFileSystemHandle championFolderHandle;
+         if (system.AllocateRelativeHandleFromPath(root, championFolderName, out championFolderHandle) != IoResult.Success) {
             return null;
          }
 
-         foreach (var champion in champions) {
-            string name;
-            if (system.GetName(champion, out name) != IoResult.Success) {
-               return null;
-            }
-
-            if (name.Equals(championFolderName, System.StringComparison.InvariantCultureIgnoreCase)) {
-               return GetSkinForChampion(system, champion, skinNumber);
-            }
-         }
-
-         return null;
-      }
-
+         return GetSkinForChampion(system, championFolderHandle, skinNumber);
       }
 
       private LoLSkin GetSkinForChampion(IFileSystem system, IFileSystemHandle championFolderHandle, uint skinNumber) {
