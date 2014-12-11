@@ -1,10 +1,8 @@
 ﻿using System;
 using System.IO;
 using Dargon.FileSystem;
-using Dargon.LeagueOfLegends;
-using Dargon.LeagueOfLegends.FileSystem;
 
-namespace liblolskins {
+namespace Dargon.LeagueOfLegends.Skins {
    public class LoLSkin {
       public string sknFilePath;
       public string sklFilePath;
@@ -12,14 +10,18 @@ namespace liblolskins {
       public string loadScreenTextureFilePath;
    }
 
-   public class LoLSkinDumper {
+   public class LeagueSkinLoader {
       private readonly IInibinLoader inibinLoader;
 
-      public LoLSkin GetSkinForChampion(RiotFileSystem system, string championFolderName, uint skinNumber) {
+      public LeagueSkinLoader() {
+         inibinLoader = new InibinLoader();
+      }
+
+      public LoLSkin GetSkinForChampion(IFileSystem system, string championFolderName, uint skinNumber) {
          var root = system.AllocateRootHandle();
 
          IFileSystemHandle charactersFolder;
-         if (system.AllocateHandleFromPath(root, @"DATA/Characters", out charactersFolder) != IoResult.Success) {
+         if (system.AllocateRelativeHandleFromPath(root, @"DATA/Characters", out charactersFolder) != IoResult.Success) {
             // TODO: Real error handling. Figure out the best way to return data / errors
             return null;
          }
@@ -61,7 +63,6 @@ namespace liblolskins {
                return CharacterInibinKeyHashes.SkinSixSkn;
             case 7:
                return CharacterInibinKeyHashes.SkinSevenSkn;
-            case 8:
             default:
                throw new ArgumentOutOfRangeException("skinNumber");
          }
@@ -113,7 +114,7 @@ namespace liblolskins {
          }
       }
 
-      private LoLSkin GetSkinForChampion(RiotFileSystem system, IFileSystemHandle championFolderHandle, uint skinNumber) {
+      private LoLSkin GetSkinForChampion(IFileSystem system, IFileSystemHandle championFolderHandle, uint skinNumber) {
          // Try to get the <championName>.inibin file
          string championName;
          if (system.GetName(championFolderHandle, out championName) != IoResult.Success) {
@@ -121,7 +122,7 @@ namespace liblolskins {
          }
 
          IFileSystemHandle skinsFolder;
-         var result = system.AllocateHandleFromPath(championFolderHandle, "Skins", out skinsFolder);
+         var result = system.AllocateRelativeHandleFromPath(championFolderHandle, "Skins", out skinsFolder);
          if (!(result == IoResult.Success || result == IoResult.NotFound)) {
             return null;
          }
@@ -131,7 +132,7 @@ namespace liblolskins {
             var folderName = skinNumber == 0 ? "Base" : "Skin" + skinNumber.ToString("D2");
 
             IFileSystemHandle inibinFileHandle;
-            if (system.AllocateHandleFromPath(championFolderHandle, "Skins/" + folderName + "/" + folderName + ".inibin", out inibinFileHandle) != IoResult.Success) {
+            if (system.AllocateRelativeHandleFromPath(championFolderHandle, "Skins/" + folderName + "/" + folderName + ".inibin", out inibinFileHandle) != IoResult.Success) {
                return null;
             }
 
@@ -161,7 +162,7 @@ namespace liblolskins {
          } else {
             // Old folder structure
             IFileSystemHandle inibinFileHandle;
-            if (system.AllocateHandleFromPath(championFolderHandle, championName + ".inibin", out inibinFileHandle) != IoResult.Success) {
+            if (system.AllocateRelativeHandleFromPath(championFolderHandle, championName + ".inibin", out inibinFileHandle) != IoResult.Success) {
                return null;
             }
 

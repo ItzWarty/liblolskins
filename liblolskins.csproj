@@ -43,13 +43,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="LoLSkinDumper.cs" />
+    <Compile Include="LeagueSkinLoader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\the-dargon-project\libdargon.game-impl-lol\libdargon.lol-impl.csproj">
-      <Project>{1c6d9ec6-2c67-46d3-92b5-a0059e1d305e}</Project>
-      <Name>libdargon.lol-impl</Name>
+    <ProjectReference Include="..\libinibin\libinibin.csproj">
+      <Project>{211c1834-ed6f-46b6-a7f6-59033dc910d5}</Project>
+      <Name>libinibin</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
