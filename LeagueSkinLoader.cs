@@ -59,7 +59,7 @@ namespace Dargon.LeagueOfLegends.Skins {
          }
 
          IFileSystemHandle championFolderHandle;
-         if (system.AllocateRelativeHandleFromPath(root, championFolderName, out championFolderHandle) != IoResult.Success) {
+         if (system.AllocateRelativeHandleFromPath(charactersFolder, championFolderName, out championFolderHandle) != IoResult.Success) {
             return null;
          }
 
