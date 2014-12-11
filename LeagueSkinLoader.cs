@@ -118,15 +118,15 @@ namespace Dargon.LeagueOfLegends.Skins {
                var skin = new LoLSkin {
                   // All skins use the 'SkinBase***' hash
                   skinName = (string)inibinFile.Properties[(uint)CharacterInibinKeyHashes.SkinBaseName],
-                  sknFilePath = "DATA/Characters/" + championName + "/Skins/ " + folderName + "/" + (string)inibinFile.Properties[(uint)CharacterInibinKeyHashes.SkinBaseSkn],
-                  sklFilePath = "DATA/Characters/" + championName + "/Skins/ " + folderName + "/" + (string)inibinFile.Properties[(uint)CharacterInibinKeyHashes.SkinBaseSkl],
-                  textureFilePath = "DATA/Characters/" + championName + "/Skins/ " + folderName + "/" + (string)inibinFile.Properties[(uint)CharacterInibinKeyHashes.SkinBaseTexture]
+                  sknFilePath = "DATA/Characters/" + championName + "/Skins/" + folderName + "/" + (string)inibinFile.Properties[(uint)CharacterInibinKeyHashes.SkinBaseSkn],
+                  sklFilePath = "DATA/Characters/" + championName + "/Skins/" + folderName + "/" + (string)inibinFile.Properties[(uint)CharacterInibinKeyHashes.SkinBaseSkl],
+                  textureFilePath = "DATA/Characters/" + championName + "/Skins/" + folderName + "/" + (string)inibinFile.Properties[(uint)CharacterInibinKeyHashes.SkinBaseTexture]
                };
 
                if (skinNumber == 0) {
-                  skin.loadScreenTextureFilePath = "DATA/Characters/" + championName + "/Skins/ " + folderName + "/" + championName + "LoadScreen.dds";
+                  skin.loadScreenTextureFilePath = "DATA/Characters/" + championName + "/Skins/" + folderName + "/" + championName + "LoadScreen.dds";
                } else {
-                  skin.loadScreenTextureFilePath = "DATA/Characters/" + championName + "/Skins/ " + folderName + "/" + championName + "LoadScreen_" + skinNumber + ".dds";
+                  skin.loadScreenTextureFilePath = "DATA/Characters/" + championName + "/Skins/" + folderName + "/" + championName + "LoadScreen_" + skinNumber + ".dds";
                }
 
                return skin;
